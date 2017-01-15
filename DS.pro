@@ -42,7 +42,8 @@ HEADERS  += include/mainwindow.h \
     include/monitor.h \
     include/dataStructures/stack.h \
     include/dataStructures/hash.h \
-    include/tabdockright.h
+    include/tabdockright.h \
+    include/dataStructures/queue.h
 
 
 INCLUDEPATH += $$PWD/include

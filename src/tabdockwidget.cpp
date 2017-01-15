@@ -52,6 +52,7 @@ void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
     lineEditDirectory->setReadOnly(true);
     QHBoxLayout *browse = new QHBoxLayout;
     QHBoxLayout *btns = new QHBoxLayout;
+    QHBoxLayout *combo = new QHBoxLayout;
     browse->addWidget(lineEditDirectory);
     browse->addWidget(btnBrowse);
 
@@ -59,10 +60,21 @@ void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
     btns->addWidget(btnReset);
     btns->addWidget(btnHelp);
 
+    QLabel *s = new QLabel("Start : ");
+    QLabel *e = new QLabel("End : ");
 
+    start = new QComboBox(this);
+    end   = new QComboBox(this);
+
+
+    combo->addWidget(s);
+    combo->addWidget(start);
+    combo->addWidget(e);
+    combo->addWidget(end);
 
     _layout->addLayout(browse);
     _layout->addWidget(table);
+    _layout->addLayout(combo);
     _layout->addLayout(btns);
     _layout->setAlignment(browse, Qt::AlignTop);
 
@@ -89,6 +101,12 @@ void TabDockWidget::slt_open() {
     QFile f(directory);
     f.open(QIODevice::ReadOnly);
     proccesFile(f);
+    for (int i{}; i < m_state; i++) {
+        start->addItem(QString("%1").arg(i));
+        end->addItem(QString("%1").arg(i));
+    }
+    start->setCurrentIndex(0);
+    end->setCurrentIndex(m_state - 1);
     emit sig_fileOpend();
     f.close();
 }

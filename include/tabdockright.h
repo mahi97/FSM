@@ -41,9 +41,9 @@ public:
     ~TabDockRightWidget();
 private:
     QTableView* m_table;
-    QStandardItemModel* m_model;
     QStringList adjacents;
 
+    PropertyGet(QStandardItemModel*, Model, m_model);
 public slots:
     void slt_update();
     void slt_build();

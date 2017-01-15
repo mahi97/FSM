@@ -13,7 +13,7 @@ TerminalDockWidget::TerminalDockWidget(QWidget *parent)
     connect(repl   , SIGNAL(command(QString)),
             this   , SLOT(procces(QString)));
 
-    connect(this   , SIGNAL(resualtReady(QString)),
+    connect(this   , SIGNAL(resultReady(QString)),
             repl   , SLOT(result(QString)));
 
     connect(this   , SIGNAL(sig_showWords()),
@@ -32,36 +32,78 @@ TerminalDockWidget::TerminalDockWidget(QWidget *parent)
 
 void TerminalDockWidget::procces(QString _commad) {
     // TODO : proccec commands
-//    QStringList comList = _commad.split(" ");
-//    comList.removeAll(" ");
+    QStringList comList = _commad.simplified().split(" ");
+    comList.removeAll(" ");
 
-//    if (comList.size()) {
-//        QString cmd = comList[0];
-//        comList.removeAt(0);
-//        if (cmd == "add") {
-//            proccesAdd(comList);
-//        } else if (cmd == "del") {
-//            proccesDel(comList);
-//        } else if (cmd == "update") {
-//            proccesUpdt(comList);
-//        } else if (cmd == "list") {
-//            proccesList(comList);
-//        } else if (cmd == "search") {
-//            proccesSrch(comList);
-//        } else if (cmd == "exit") {
-//            qApp->exit();
-//        } else {
-//            emit resualtReady("err : command not found  ->  " + _commad);
-//        }
-//        return;
-//    }
-    emit resualtReady("err : command not found!!!");
+    if (comList.size()) {
+        QString cmd = comList[0];
+        comList.removeAt(0);
+        if (cmd == "check") {
+            proccesCheck(comList);
+        } else if (cmd == "del") {
+            proccesDel(comList);
+        } else if (cmd == "find") {
+            proccesFind(comList);
+        } else if (cmd == "exit") {
+            qApp->exit();
+        } else {
+            emit resultReady("err : command not found  ->  " + _commad);
+        }
+        return;
+    }
+    emit resultReady("err : command not found!!!");
+
+}
+
+void TerminalDockWidget::proccesCheck(QStringList & _cmd) {
+    if (_cmd.size() == 1) {
+        if (checkFSM(_cmd[0])) {
+
+            emit resultReady("True");
+
+        } else {
+
+            emit resultReady("False");
+
+        }
+    } else {
+        emit resultReady("err : you should enter just one string");
+    }
+}
+
+bool TerminalDockWidget::checkFSM(QString & _str) {
+    int s = tabDock->getcmb_Start() -> currentIndex();
+    int e = tabDock->getcmb_end()   -> currentIndex();
+
+    Queue q;
+    for(int i {}; i < _str.size(); i++) {
+        q.enqueue(_str.at(i).toLatin1());
+    }
+    int i {0};
+    while (!q.isEmpty()) {
+        char c = q.dequeue();
+        for (int j{}; j < tabDockRight->getModel()->columnCount(); j++) {
+            if ( tabDockRight->getModel()->item(s,j)->text().contains(c) ) {
+                qDebug() << j;
+                s = j;
+            }
+        }
+    }
+
+}
+
+void TerminalDockWidget::proccesDel(QStringList & _cmd) {
+
+}
+
+
+void TerminalDockWidget::proccesFind(QStringList & _cmd) {
 
 }
 
 void TerminalDockWidget::slt_searchFinished() {
     wordsToSearch--;
     if (wordsToSearch == 0) {
-        emit resualtReady("Search is Done. ");
+        emit resultReady ("Search is Done. ");
     }
 }

@@ -7,5 +7,6 @@
 #include "dataStructures/tst.h"
 #include "dataStructures/linkedlist.h"
 #include "dataStructures/hash.h"
+#include "dataStructures/queue.h"
 
 #endif // TREES_H
