@@ -12,6 +12,7 @@
 #include <QTime>
 #include <QColor>
 
+
 // TODO : Add version control to base
 #define REVNUM " version 0.0.1"
 

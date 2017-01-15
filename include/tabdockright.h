@@ -24,6 +24,8 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QCheckBox>
+#include <QTableView>
+#include <QStandardItemModel>
 
 #include "base.h"
 #include "searchthread.h"
@@ -34,6 +36,9 @@ public:
     TabDockRightWidget(QWidget* parent);
     ~TabDockRightWidget();
 private:
+    QTableView* m_table;
+    QStandardItemModel* m_model;
+
 };
 
 extern TabDockRightWidget* tabDockRight;

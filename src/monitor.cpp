@@ -30,15 +30,7 @@ Monitor::Monitor(QWidget *parent) : QTextEdit(parent) {
 }
 
 Monitor::~Monitor() {
-    QFileDialog fd;
-    QString str;
-    str = fd.getSaveFileName(this, "Save output File");
-    if (str.size() > 3) {
-        QFile file(str);
-        file.open(QIODevice::WriteOnly);
-        file.write(this->toHtml().toLatin1());
-        file.close();
-    }
+
 }
 
 void Monitor::show(QString _str, QColor _color) {
