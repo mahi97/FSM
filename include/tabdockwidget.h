@@ -51,11 +51,15 @@ private:
     QPushButton *btnHelp;
     QLineEdit   *lineEditDirectory;
     QTableView  *table;
-    QStandardItemModel *model;
+
+
 
     QString directory;
 
     int signalCounter;
+
+    PropertyGet(int, State, m_state);
+    PropertyGet(QStandardItemModel*, Model, model);
 
 public slots:
     void slt_open();
@@ -63,7 +67,6 @@ public slots:
     void slt_reset();
     void slt_browse();
     void slt_buildComplete();
-    void slt_update(QString _file);
     void slt_showLines(SearchResult*);
 
 private:
@@ -76,7 +79,8 @@ private:
 signals:
     void sig_changeTree(ETree);
     void sig_fileToBuild(File*);
-
+    void sig_fileOpend();
+    void sig_build();
 
 };
 

@@ -89,38 +89,16 @@ void TabDockWidget::slt_open() {
     QFile f(directory);
     f.open(QIODevice::ReadOnly);
     proccesFile(f);
-
-    //TODO : change it to file
-//    QDirIterator it(directory);
-//    while (it.hasNext()) {
-//        QString temp = it.next();
-//        if (temp.endsWith(".txt")) {
-//            slt_add(temp);
-//        }
-//    }
-
+    emit sig_fileOpend();
+    f.close();
 }
 
-void TabDockWidget::slt_update(QString _file) {
-    // TODO : write update code
-//    QStringList temp;
-//    temp = _file.split(QDir::separator());
-//    File* tFile = new File;
-//    tFile->name = temp.back();
-//    tFile->path = _file;
-//    names.append(tFile->name);
-//    paths.append(tFile->path);
-//    files.append(tFile);
-//    QStandardItem *item = new QStandardItem(temp.back());
-//    item->setEditable(false);
-//    model->appendRow(item);
-
-//    emit sig_fileToBuild(tFile);
-//    signalCounter++;
-}
 
 void TabDockWidget::slt_build() {
 
+
+
+    emit sig_build();
     // TODO : write build code
 //    Q_FOREACH(File* file, files) {
 //        if (!lastFiles.contains(file->name)) {
@@ -152,6 +130,7 @@ void TabDockWidget::slt_showLines(SearchResult * _sr) {
         Q_FOREACH(Data datum, _sr->result[0]) {
             showDatum(datum);
         }
+
     } else {
         QList<Data> shared = _sr->result[0];
         QList<bool> sameLine;
@@ -252,16 +231,27 @@ void TabDockWidget::showLine(const QString& _line,
 void TabDockWidget::proccesFile(QFile & _file) {
     QList<QByteArray> first = _file.readLine().simplified().split(' ');
     QList<int> states;
+    QList<QStandardItem*> firstRow;
+    QStandardItem* state = new QStandardItem("State");
+    firstRow.append(state);
+    m_state = 0;
     Q_FOREACH(QByteArray word, first) {
         bool ok {false};
         int tState {word.toInt(&ok)};
         if (ok) {
+            QStandardItem* item = new QStandardItem(QString("S : %1").arg(tState));
             states.append(tState);
+            firstRow.append(item);
+            m_state++;
         }
     }
+    model->appendRow(firstRow);
 
     while(_file.canReadLine()) {
-        QList<QByteArray> tLine = _file.readLine().simplified().split(' ');
+        QByteArray text = _file.readLine();
+        if (text.size() < 5) break;
+        QList<QByteArray> tLine = text.simplified().split(' ');
+
         QList<QStandardItem*> items;
         bool ok {false};
         int cur_state = tLine[0].toInt(&ok);

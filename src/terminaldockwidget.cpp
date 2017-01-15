@@ -16,12 +16,6 @@ TerminalDockWidget::TerminalDockWidget(QWidget *parent)
     connect(this   , SIGNAL(resualtReady(QString)),
             repl   , SLOT(result(QString)));
 
-    connect(this   , SIGNAL(sig_add(QString)),
-            tabDock, SLOT(slt_update(QString)));
-
-    connect(this   , SIGNAL(sig_update(QString)),
-            tabDock, SLOT(slt_update(QString)));
-
     connect(this   , SIGNAL(sig_showWords()),
             search , SLOT(slt_showWords()),
             Qt::QueuedConnection);

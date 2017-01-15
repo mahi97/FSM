@@ -46,7 +46,7 @@ HEADERS  += include/mainwindow.h \
 
 
 INCLUDEPATH += $$PWD/include
-INCLUDEPATH += /usr/local/Cellar/graphviz/2.40.1/include/graphviz
+INCLUDEPATH += /usr/local/Cellar/graphviz/2.40.1/include/
 
 LIBS += -L/usr/local/Cellar/graphviz/2.40.1/lib -lgvc -lcgraph -lcdt
 

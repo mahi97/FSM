@@ -1,4 +1,8 @@
 #include "mainwindow.h"
+#include "graphviz/gvc.h"
+#include "graphviz/cgraph.h"
+#include "graphviz/cdt.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent) {

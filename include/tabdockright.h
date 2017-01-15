@@ -30,14 +30,23 @@
 #include "base.h"
 #include "searchthread.h"
 #include "monitor.h"
+#include "tabdockwidget.h"
 
 class TabDockRightWidget : public QDockWidget{
+
+    Q_OBJECT
+
 public:
     TabDockRightWidget(QWidget* parent);
     ~TabDockRightWidget();
 private:
     QTableView* m_table;
     QStandardItemModel* m_model;
+    QStringList adjacents;
+
+public slots:
+    void slt_update();
+    void slt_build();
 
 };
 
