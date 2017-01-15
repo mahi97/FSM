@@ -12,6 +12,7 @@
 #include "base.h"
 #include "trees.h"
 #include "searchthread.h"
+#include "tabdockright.h"
 
 
 class MainWindow : public QMainWindow {
@@ -26,7 +27,7 @@ private:
     void initWidget(Monitor* _monitor);
     void initWidget(TabDockWidget* _tab);
     void initWidget(TerminalDockWidget *_terminal);
-
+    void initWidget(TabDockRightWidget *_tab);
 
 };
 
