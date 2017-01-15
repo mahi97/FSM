@@ -6,32 +6,6 @@ SearchThread::SearchThread(QObject* parent)
     : QThread(parent) {
     treeInvert = NULL;
 
-    QFile stop(":/stop");
-    stop.open(QIODevice::ReadOnly);
-    QString stopString = stop.readAll();
-    stop.close();
-
-    QStringList signList;
-    signList << ".\n"
-             << ","
-             << "."
-             << "'s"
-             << ""
-             << "\n"
-             << "nt"
-             << "?\n"
-             << ";"
-             << ":"
-             << "--"
-             << "?"
-             << "-"
-             << "$"
-             << ")";
-
-
-    stopWord = stopString.split("\r\n");
-    stopWord.append(signList);
-
     file = new QFile;
     time = new QTime;
     time->start();

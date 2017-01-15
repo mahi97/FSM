@@ -6,15 +6,9 @@ TabDockWidget::TabDockWidget(QWidget *parent)
     : QDockWidget(parent) {
     w = new QWidget(this);
     QVBoxLayout *control = new QVBoxLayout(w);
-    fileViewer = new QListView(this);
+    table = new QTableView(this);
     model = new QStandardItemModel(this);
-    fileViewer->setModel(model);
-    dataStructs << "-- Select a Tree --"
-                << "Binary Search Tree (BST)"
-                << "Ternary Search Tree (TST)"
-                << "Trie"
-                << "Hash";
-
+    table->setModel(model);
 
     fillLayout(control);
 
@@ -22,15 +16,12 @@ TabDockWidget::TabDockWidget(QWidget *parent)
     setWidget(w);
 
     signalCounter = 0;
-    search->directory = &directory;
 
     // Conecctions
     connect(btnBrowse        , SIGNAL(clicked(bool)),
             this             , SLOT(slt_browse()));
     connect(btnBuild         , SIGNAL(clicked(bool)),
             this             , SLOT(slt_build()));
-    connect(cmbDataStrct     , SIGNAL(currentIndexChanged(QString)),
-            this             , SLOT(slt_changeTree(QString)));
     connect(this             , SIGNAL(sig_changeTree(ETree)),
             search           , SLOT(slt_chooseTree(ETree)));
     connect(this             , SIGNAL(sig_fileToBuild(File*)),
@@ -43,9 +34,6 @@ TabDockWidget::TabDockWidget(QWidget *parent)
     connect(btnReset         , SIGNAL(clicked(bool)),
             this             , SLOT(slt_reset()));
 
-    connect(lineEditDirectory, SIGNAL(editingFinished()),
-            this             , SLOT(slt_textEdit()));
-
     connect(search           , SIGNAL(sig_searchFinished(SearchResult*)),
             this             , SLOT(slt_showLines(SearchResult*)));
 }
@@ -56,12 +44,12 @@ TabDockWidget::~TabDockWidget() {
 
 void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
 
-    cmbDataStrct = new QComboBox(0);
     btnBrowse = new QPushButton("Browse", this);
     btnBuild = new QPushButton("Build", this);
     btnHelp = new QPushButton("Help", this);
     btnReset = new QPushButton("Reset", this);
     lineEditDirectory = new QLineEdit(this);
+    lineEditDirectory->setReadOnly(true);
     QHBoxLayout *browse = new QHBoxLayout;
     QHBoxLayout *btns = new QHBoxLayout;
     browse->addWidget(lineEditDirectory);
@@ -71,12 +59,10 @@ void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
     btns->addWidget(btnReset);
     btns->addWidget(btnHelp);
 
-    cmbDataStrct->addItems(dataStructs);
 
 
     _layout->addLayout(browse);
-    _layout->addWidget(fileViewer);
-    _layout->addWidget(cmbDataStrct);
+    _layout->addWidget(table);
     _layout->addLayout(btns);
     _layout->setAlignment(browse, Qt::AlignTop);
 
@@ -87,162 +73,77 @@ void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
 void TabDockWidget::slt_browse() {
     QString tempDir;
     QFileDialog fd;
-    tempDir = fd.getExistingDirectory(this,
-                                      "Please choose a Folder",
-                                      "",
-                                      QFileDialog::ShowDirsOnly);
+    tempDir = fd.getOpenFileName(this,
+                                      "Please choose a file",
+                                      "");
     if (tempDir.size() >= 3) {
         directory = tempDir;
         lineEditDirectory->setText(tempDir);
         slt_open();
-        slt_changeTree(cmbDataStrct->currentText());
     }
 }
 
-void TabDockWidget::slt_textEdit() {
-
-    QString text = lineEditDirectory->text();
-    text = text + ((text.endsWith("/")) ? "" : "/");
-    QFileInfo fi = QFileInfo(text);
-    if (fi.exists() && fi.isDir()) {
-        directory = fi.path();
-        slt_open();
-    } else {
-        QMessageBox::warning(this,
-                             "Folder not Found",
-                             "Please enter a existing FOLDER name",
-                             QMessageBox::Ok);
-    }
-}
 
 void TabDockWidget::slt_open() {
-    files.clear();
-    names.clear();
-    paths.clear();
-    lastFiles.clear();
     model->clear();
-    QDirIterator it(directory);
-    while (it.hasNext()) {
-        QString temp = it.next();
-        if (temp.endsWith(".txt")) {
-            slt_add(temp);
-        }
-    }
+    QFile f(directory);
+    f.open(QIODevice::ReadOnly);
+    proccesFile(f);
 
-}
+    //TODO : change it to file
+//    QDirIterator it(directory);
+//    while (it.hasNext()) {
+//        QString temp = it.next();
+//        if (temp.endsWith(".txt")) {
+//            slt_add(temp);
+//        }
+//    }
 
-void TabDockWidget::slt_add(QString _file) {
-
-    QStringList temp;
-    temp = _file.split(QDir::separator());
-    File* tFile = new File;
-    tFile->name = temp.back();
-    tFile->path = _file;
-    names.append(tFile->name);
-    paths.append(tFile->path);
-    files.append(tFile);
-    QStandardItem *item = new QStandardItem(temp.back());
-    item->setEditable(false);
-    model->appendRow(item);
 }
 
 void TabDockWidget::slt_update(QString _file) {
-    QStringList temp;
-    temp = _file.split(QDir::separator());
-    File* tFile = new File;
-    tFile->name = temp.back();
-    tFile->path = _file;
-    names.append(tFile->name);
-    paths.append(tFile->path);
-    files.append(tFile);
-    QStandardItem *item = new QStandardItem(temp.back());
-    item->setEditable(false);
-    model->appendRow(item);
+    // TODO : write update code
+//    QStringList temp;
+//    temp = _file.split(QDir::separator());
+//    File* tFile = new File;
+//    tFile->name = temp.back();
+//    tFile->path = _file;
+//    names.append(tFile->name);
+//    paths.append(tFile->path);
+//    files.append(tFile);
+//    QStandardItem *item = new QStandardItem(temp.back());
+//    item->setEditable(false);
+//    model->appendRow(item);
 
-    emit sig_fileToBuild(tFile);
-    signalCounter++;
+//    emit sig_fileToBuild(tFile);
+//    signalCounter++;
 }
 
 void TabDockWidget::slt_build() {
-    //    slt_changeTree(cmbDataStrct->currentText());
-    if (files.isEmpty()) {
-        QMessageBox::critical(this,
-                              "Can't Build",
-                              "There's no file to build",
-                              QMessageBox::Ok);
-        return;
-    }
 
-    if (cmbDataStrct->currentIndex() == 0) {
-        QMessageBox::critical(this,
-                              "Can't Build",
-                              "You Should Select a Tree First.",
-                              QMessageBox::Ok);
-        return;
-    }
-    Q_FOREACH(File* file, files) {
-        if (!lastFiles.contains(file->name)) {
-            btnBuild->setEnabled(false);
-            cmbDataStrct->setEnabled(false);
-            lastFiles.append(file->name);
-            emit sig_fileToBuild(file);
-            signalCounter++;
-        }
-    }
-    if (signalCounter == 0) {
-        monitor->show("Tree is Update, There's Nothing to build", Qt::red);
-    }
+    // TODO : write build code
+//    Q_FOREACH(File* file, files) {
+//        if (!lastFiles.contains(file->name)) {
+//            btnBuild->setEnabled(false);
+//            cmbDataStrct->setEnabled(false);
+//            lastFiles.append(file->name);
+//            emit sig_fileToBuild(file);
+//            signalCounter++;
+//        }
+//    }
+//    if (signalCounter == 0) {
+//        monitor->show("Tree is Update, There's Nothing to build", Qt::red);
+//    }
 }
 
 void TabDockWidget::slt_buildComplete() {
-    //    signalCounter--;
-    //    if (signalCounter == 0) {
+
     btnBuild->setEnabled(true);
-    cmbDataStrct->setEnabled(true);
-    //    }
-}
-
-void TabDockWidget::slt_changeTree(QString _tree) {
-
-    lastFiles.clear();
-
-    if(_tree == dataStructs[0])
-        emit sig_changeTree(ETree::None);
-    else if(_tree == dataStructs[1])
-        emit sig_changeTree(ETree::BST);
-    else if(_tree == dataStructs[2])
-        emit sig_changeTree(ETree::TST);
-    else if(_tree == dataStructs[3])
-        emit sig_changeTree(ETree::Trie);
-    else if (_tree == dataStructs[4])
-        emit sig_changeTree(ETree::Hash);
-    else
-        emit sig_changeTree(ETree::None);
-
-}
-
-void TabDockWidget::slt_del(QString _name) {
-    lastFiles.removeOne(_name);
-    for(size_t i{}; i < files.size(); i++) {
-        if (_name == files[i]->name) {
-            for(size_t j{}; j < model->rowCount();j++) {
-                if (model->item(j)->text() == files[i]->name) {
-                    model->removeRow(j);
-                }
-            }
-            File* tempFile = files[i];
-            tempFile->del = true;
-            emit sig_fileToBuild(tempFile);
-            files.removeAt(i);
-            names.removeAt(i);
-            paths.removeAt(i);
-
-            break;
-        }
-    }
 }
 
 void TabDockWidget::slt_showLines(SearchResult * _sr) {
+    // TODO : check this
+    return;
     if (_sr->words.size() == 0) {
         monitor->show("Nothing found", Qt::black);
         return;
@@ -288,6 +189,8 @@ void TabDockWidget::slt_showLines(SearchResult * _sr) {
 }
 
 void TabDockWidget::showDatum(const Data& _datum) {
+    // TODO : check this
+    return;
     QFile file(directory + QDir::separator() + _datum.file);
     QByteArray byteArr;
     file.open(QIODevice::ReadOnly);
@@ -299,6 +202,8 @@ void TabDockWidget::showDatum(const Data& _datum) {
 
 void TabDockWidget::showLine(const QString& _line,
                              const Data&    _datum) {
+    // TODO : check this
+    return;
     QString result;
     QString start{};
     QString end{};
@@ -344,6 +249,46 @@ void TabDockWidget::showLine(const QString& _line,
     monitor->show(result, Qt::black);
 }
 
+void TabDockWidget::proccesFile(QFile & _file) {
+    QList<QByteArray> first = _file.readLine().simplified().split(' ');
+    QList<int> states;
+    Q_FOREACH(QByteArray word, first) {
+        bool ok {false};
+        int tState {word.toInt(&ok)};
+        if (ok) {
+            states.append(tState);
+        }
+    }
+
+    while(_file.canReadLine()) {
+        QList<QByteArray> tLine = _file.readLine().simplified().split(' ');
+        QList<QStandardItem*> items;
+        bool ok {false};
+        int cur_state = tLine[0].toInt(&ok);
+        if (!ok) qWarning() << "SomeThings wrong with input file";
+        tLine.pop_front();
+        QStandardItem* first_ = new QStandardItem(QString("S : %1").arg(cur_state));
+        items.append(first_);
+
+        Q_FOREACH (QByteArray word, tLine) {
+            if (word.startsWith("(") && word.endsWith(")")) {
+                word.chop(1);
+                word.remove(0,1);
+                QStandardItem *item = new QStandardItem(QString(word));
+                items.append(item);
+                QList<QByteArray> chars = word.split(',');
+                QList<char> tChar;
+                Q_FOREACH(QByteArray c, chars) {
+                    tChar.append(c.at(0));
+                }
+            }
+        }
+        model->appendRow(items);
+    }
+
+}
+
 void TabDockWidget::slt_reset() {
+    // TODO : new reset for graphviz
     monitor->clear();
 }

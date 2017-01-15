@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     /* Final */
 //    this->showMaximized();
-    this->setWindowTitle(QString("DS Project (%1)").arg(QString(REVNUM)));
+    this->setWindowTitle(QString("DS Project2 (%1)").arg(QString(REVNUM)));
 }
 
 MainWindow::~MainWindow() {

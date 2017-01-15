@@ -20,11 +20,6 @@ public:
     TerminalDockWidget(QWidget* parent);
     ReplWidget *repl;
 private:
-    void proccesAdd   (const QStringList &);
-    void proccesDel   (const QStringList &);
-    void proccesUpdt  (const QStringList &);
-    void proccesList  (const QStringList &);
-    void proccesSrch  (const QStringList &);
 
     int wordsToSearch;
     bool searchPhrase;

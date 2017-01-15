@@ -46,6 +46,9 @@ HEADERS  += include/mainwindow.h \
 
 
 INCLUDEPATH += $$PWD/include
+INCLUDEPATH += /usr/local/Cellar/graphviz/2.40.1/include/graphviz
+
+LIBS += -L/usr/local/Cellar/graphviz/2.40.1/lib -lgvc -lcgraph -lcdt
 
 OBJECTS_DIR = $$PWD/objs/
 MOC_DIR = $$PWD/objs/

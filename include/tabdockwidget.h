@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QCheckBox>
+#include <QTableView>
 
 #include "base.h"
 #include "searchthread.h"
@@ -42,44 +43,35 @@ public:
 private:
 
     void fillLayout(QVBoxLayout *_layout);
-    QStringList dataStructs;
     QWidget *w;
     ///////
-    QComboBox *cmbDataStrct;
     QPushButton *btnBrowse;
     QPushButton *btnBuild;
     QPushButton *btnReset;
     QPushButton *btnHelp;
-    QPushButton *Exit;
-    QLineEdit *lineEditDirectory;
-    QListView *fileViewer;
+    QLineEdit   *lineEditDirectory;
+    QTableView  *table;
     QStandardItemModel *model;
-    QList<File*> files;
-    QStringList lastFiles;
+
+    QString directory;
 
     int signalCounter;
-
-    PropertyGet(QString, Directory, directory);
-    PropertyGet(QStringList, Names, names);
-    PropertyGet(QStringList, Paths, paths);
 
 public slots:
     void slt_open();
     void slt_build();
     void slt_reset();
     void slt_browse();
-    void slt_textEdit();
     void slt_buildComplete();
-    void slt_add(QString _file);
     void slt_update(QString _file);
-    void slt_changeTree(QString _tree);
-    void slt_del(QString);
     void slt_showLines(SearchResult*);
 
 private:
     void showDatum(const Data &);
     void showLine (const QString&, const Data&);
+    void proccesFile(QFile&);
 
+    QList< QList< QList<char> > > matrix;
 
 signals:
     void sig_changeTree(ETree);
