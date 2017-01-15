@@ -1,0 +1,4 @@
+#ifndef TABDOCKRIGHT_H
+#define TABDOCKRIGHT_H
+
+#endif // TABDOCKRIGHT_H
