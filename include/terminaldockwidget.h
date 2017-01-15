@@ -27,6 +27,8 @@ private:
     void proccesFind(QStringList&);
 
     bool checkFSM(QString&);
+    void backTrack(int index, int arr[], int s, int e, bool &done, Queue c);
+    bool promising(int _i, int arr[], int &s, int e, char c);
 
     int wordsToSearch;
     bool searchPhrase;

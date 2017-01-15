@@ -58,11 +58,9 @@ void TerminalDockWidget::procces(QString _commad) {
 void TerminalDockWidget::proccesCheck(QStringList & _cmd) {
     if (_cmd.size() == 1) {
         if (checkFSM(_cmd[0])) {
-
             emit resultReady("True");
 
         } else {
-
             emit resultReady("False");
 
         }
@@ -72,24 +70,71 @@ void TerminalDockWidget::proccesCheck(QStringList & _cmd) {
 }
 
 bool TerminalDockWidget::checkFSM(QString & _str) {
-    int s = tabDock->getcmb_Start() -> currentIndex();
-    int e = tabDock->getcmb_end()   -> currentIndex();
+    int s = tabDock->getcmb_Start() -> currentIndex() + 1;
+    int e = tabDock->getcmb_end()   -> currentIndex() + 1;
 
     Queue q;
     for(int i {}; i < _str.size(); i++) {
         q.enqueue(_str.at(i).toLatin1());
     }
     int i {0};
-    while (!q.isEmpty()) {
-        char c = q.dequeue();
-        for (int j{}; j < tabDockRight->getModel()->columnCount(); j++) {
-            if ( tabDockRight->getModel()->item(s,j)->text().contains(c) ) {
-                qDebug() << j;
-                s = j;
-            }
-        }
+    int* arr = new int [tabDock->getState()];
+    bool done;
+    backTrack(-1, arr, s, e, done, q);
+
+    return done;
+
+//    while (!q.isEmpty()) {
+//        char c = q.dequeue();
+//        for (int j{}; j < tabDockRight->getModel()->columnCount(); j++) {
+//            if ( tabDockRight->getModel()->item(s,j)->text().contains(c) ) {
+//                qDebug() << j;
+//                s = j + 1;
+//            }
+//        }
+//    }
+}
+
+void TerminalDockWidget::backTrack(int index, int arr[],
+                                   int s,     int e,
+                                   bool& done, Queue c) {
+
+    if (done) {
+        return;
+    }
+    if (c.isEmpty()) {
+        if (s == e || done) done = true;
+        else done = false;
+        return;
+    }
+    if (index > tabDock->getState()) {
+        return;
     }
 
+    if (promising(index, arr, s, e, c.front())){
+        if (index != -1)
+            c.dequeue();
+        qDebug() << tabDock->getModel()->columnCount();
+        for (int i{}; i < tabDock->getModel()->columnCount() ; i++) {
+            qDebug() << "sic" << s << " " << i << " " << c.size();
+            backTrack(i , arr, s, e, done, c);
+        }
+
+    }
+}
+
+bool TerminalDockWidget::promising(int _i, int arr[],
+                                   int& s, int e, char c) {
+    if (_i == -1) return true;
+    if (tabDock->getModel()->item(_i, s)->text().contains(c)) {
+        s = _i;
+        qDebug() << "f" << s;
+        return true;
+
+    } else {
+        return false;
+
+    }
 }
 
 void TerminalDockWidget::proccesDel(QStringList & _cmd) {
