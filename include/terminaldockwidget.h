@@ -43,13 +43,27 @@ private:
     void tarjanDFS(int i);
     void deleteLoops();
 
+
+    /////// Prim
+    ///
+    ///
+    ///
+
+    void primMST(int **graph, int size);
+    int minKey(int key[], bool mstSet[], int size);
+
+    ///
+    ///
+    ///
+    ////// Prim
+
     int wordsToSearch;
     bool searchPhrase;
 
     QStringList loops;
 
 
-    ////TARJAN
+    ////// TARJAN
     ///
     ///
     ///
@@ -59,8 +73,7 @@ private:
     }
 
     int n;
-    struct Node
-    {
+    struct Node {
         QVector<int> adj;
     };
     Node graf[MAX_N];
@@ -74,6 +87,9 @@ private:
     QStringList components;
 
     ///
+    ///
+    ///
+    ////// TARJAN
 
 
 

@@ -170,8 +170,7 @@ void TerminalDockWidget::tarjanDFS(int i) {
     LowLink[i] = Indices;
     m_stack.push(i);
     onStack[i] = true;
-    for (int j{} ; j < graf[i].adj.size() ; j++)
-    {
+    for (int j{} ; j < graf[i].adj.size() ; j++) {
         int w = graf[i].adj[j];
         if (Index[w] == 0) {
             tarjanDFS(w);
@@ -181,6 +180,7 @@ void TerminalDockWidget::tarjanDFS(int i) {
             LowLink[i] = min(LowLink[i], Index[w]);
 
         }
+
     }
     if (LowLink[i] == Index[i]) {
         int w = 0;
@@ -191,7 +191,7 @@ void TerminalDockWidget::tarjanDFS(int i) {
             m_stack.pop();
 
             component[w] = numComponents;
-            onStack[w]=false;
+            onStack[w] = false;
             com.append(QString("%1 ").arg(w));
 
         } while (i != w && !m_stack.empty());
@@ -206,6 +206,44 @@ void TerminalDockWidget::tarjanDFS(int i) {
 
 
 void TerminalDockWidget::deleteLoops() {
+    QStandardItemModel*& rModel = tabDock->getModel();
+    int size = tabDock->getState();
+
+    int **graph = new int* [size];
+    for (size_t i {}; i < size; i++) {
+        graph[i] = new int[size];
+        for (size_t j {}; j < size; j++) {
+            if (rModel->item(j + 1, i + 1)->text() != "-"
+            && i != j) {
+                graph[i][j] = 100 - rModel->item(j + 1, i + 1)->text().size();
+
+            } else {
+                graph[i][j] = 0;
+
+            }
+        }
+    }
+
+    for (int i{}; i < size; i++) {
+        for (int j{}; j < size; j++) {
+            qDebug() << graph[i][j];
+        }
+        qDebug() << "---------------";
+    }
+
+    primMST(graph, size);
+
+    for (int i{}; i < size; i++) {
+        for (int j{}; j < size; j++) {
+            if (!graph[i][j]) {
+                rModel->item(i + 1, j + 1)->setText("-");
+            }
+            qDebug() << graph[i][j];
+        }
+        qDebug() << "---------------";
+    }
+
+
 
 }
 
@@ -214,12 +252,14 @@ void TerminalDockWidget::proccesDel(QStringList & _cmd) {
         if (_cmd[0] == "loop") {
             deleteLoops();
             emit resultReady("Deleted !");
+
         } else {
             emit resultReady("err : just write `del loop`");
 
         }
     } else {
         emit resultReady("err: just write `del loop`");
+
     }
 }
 
@@ -235,11 +275,14 @@ void TerminalDockWidget::proccesFind(QStringList & _cmd) {
                 tStr.append("), ");
             }
             emit resultReady(tStr);
+
         } else {
             emit resultReady("err : just write `find loop`");
+
         }
     } else {
         emit resultReady("err : just write `find loop`");
+
     }
 }
 
@@ -248,4 +291,66 @@ void TerminalDockWidget::slt_searchFinished() {
     if (wordsToSearch == 0) {
         emit resultReady ("Search is Done. ");
     }
+}
+
+
+int TerminalDockWidget::minKey(int key[], bool mstSet[], int size) {
+    int min = INT_MAX, min_index;
+
+    for (int v = 0; v < size; v++) {
+        if (mstSet[v] == false && key[v] < min) {
+            min = key[v];
+            min_index = v;
+        }
+    }
+    return min_index;
+}
+
+void TerminalDockWidget::primMST(int **graph, int size) {
+    int  *parent = new int[size];
+    int  *key    = new int[size];
+    bool *mstSet = new bool[size];
+
+    for (int i = 0; i < size; i++) {
+        key[i] = INT_MAX;
+        mstSet[i] = false;
+        parent[i] = 0;
+    }
+
+
+    key[0] = 0;
+    parent[0] = -1;
+
+    for (int count = 0; count < size - 1; count++) {
+
+        int u = minKey(key, mstSet, size);
+
+        mstSet[u] = true;
+
+        for (int v = 0; v < size; v++) {
+            if (graph[u][v]
+                    &&  mstSet[v] == false
+                    &&  graph[u][v] <  key[v]) {
+
+                parent[v]  = u;
+                key[v] = graph[u][v];
+            }
+        }
+    }
+
+
+    qDebug() << "Edge           Weight";
+    for (int i{}; i < size; i++) {
+        for (int j{}; j < size; j++) {
+            graph[i][j] = 0;
+        }
+    }
+    for (int i = 1; i < size; i++) {
+        graph[i][parent[i]] = 1;
+        qDebug() << "p " << parent[i];
+        qDebug() << "i " << i;
+        qDebug() << "g " << graph[i][parent[i]];
+    }
+
+    //     printMST(parent, size, graph);
 }
