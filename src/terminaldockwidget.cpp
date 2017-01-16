@@ -131,6 +131,13 @@ QStringList TerminalDockWidget::findLoops() {
     QStandardItemModel*& rModel = tabDock->getModel();
     int size = tabDock->getState();
     n = size;
+
+
+    for (int i{}; i < size; i++)
+        graf[i].adj.clear();
+
+
+
     for (int i{}; i < size; i++) {
         for (int j{}; j < size; j++) {
             if (rModel->item(i + 1, j + 1)->text() != "-") {
@@ -152,7 +159,7 @@ void TerminalDockWidget::tarjan()
         m_stack.pop();
     }
 
-    for (int i=n;i>0;i--) {
+    for (int i{}; i < n; i++) {
         onStack[i] = LowLink[i] = Index[i] = 0;
     }
 
@@ -195,9 +202,16 @@ void TerminalDockWidget::tarjanDFS(int i) {
             com.append(QString("%1 ").arg(w));
 
         } while (i != w && !m_stack.empty());
+        qDebug() << "cs " << com.size();
+        qDebug() << "ci " << com.toInt();
+        qDebug() << "tx " << tabDock->getModel()->item(com.toInt(), com.toInt())->text();
 
-        components.append(com);
-        numComponents++;
+        if (com.size() != 3
+        || tabDock->getModel()->item(com.toInt() + 1, com.toInt() + 1)->text() != "-") {
+            components.append(com);
+            numComponents++;
+        }
+
 
     }
 
@@ -267,6 +281,7 @@ void TerminalDockWidget::proccesDel(QStringList & _cmd) {
 void TerminalDockWidget::proccesFind(QStringList & _cmd) {
     if (_cmd.size() == 1) {
         if (_cmd[0] == "loop") {
+            loops.clear();
             loops = findLoops();
             QString tStr;
             Q_FOREACH(QString str, loops) {
