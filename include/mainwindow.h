@@ -11,7 +11,6 @@
 #include "monitor.h"
 #include "base.h"
 #include "trees.h"
-#include "searchthread.h"
 #include "tabdockright.h"
 
 

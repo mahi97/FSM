@@ -4,12 +4,17 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DS
 TEMPLATE = app
+
+#GraphViz librairie
+DEFINES += WITH_CGRAPH
+INCLUDEPATH += private
+QMAKE_CXXFLAGS += -DQGVCORE_LIB
 
 VPATH += $$PWD/src
 SOURCES += main.cpp\
@@ -20,7 +25,6 @@ SOURCES += main.cpp\
     dataStructures/bst.cpp \
     dataStructures/tst.cpp \
     dataStructures/trie.cpp \
-    searchthread.cpp \
     dataStructures/linkedlist.cpp \
     src/terminal/ReplWidget.cpp \
     src/monitor.cpp \
@@ -36,7 +40,6 @@ HEADERS  += include/mainwindow.h \
     include/dataStructures/tst.h \
     include/dataStructures/trie.h \
     include/trees.h \
-    include/searchthread.h \
     include/dataStructures/linkedlist.h \
     include/terminal/ReplWidget.h \
     include/monitor.h \
@@ -49,8 +52,10 @@ HEADERS  += include/mainwindow.h \
 
 INCLUDEPATH += $$PWD/include
 INCLUDEPATH += /usr/local/Cellar/graphviz/2.40.1/include/
+INCLUDEPATH += /usr/local/include
 
 LIBS += -L/usr/local/Cellar/graphviz/2.40.1/lib -lgvc -lcgraph -lcdt
+LIBS += -L/usr/local/lib -lQGVCore
 
 OBJECTS_DIR = $$PWD/objs/
 MOC_DIR = $$PWD/objs/

@@ -28,7 +28,6 @@
 #include <QStandardItemModel>
 
 #include "base.h"
-#include "searchthread.h"
 #include "monitor.h"
 #include "tabdockwidget.h"
 

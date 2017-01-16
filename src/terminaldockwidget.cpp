@@ -16,18 +16,6 @@ TerminalDockWidget::TerminalDockWidget(QWidget *parent)
     connect(this   , SIGNAL(resultReady(QString)),
             repl   , SLOT(result(QString)));
 
-    connect(this   , SIGNAL(sig_showWords()),
-            search , SLOT(slt_showWords()),
-            Qt::QueuedConnection);
-
-    connect(this   , SIGNAL(sig_searchWord(QString)),
-            search , SLOT(slt_search(QString)),
-            Qt::QueuedConnection);
-
-    connect(search , SIGNAL(sig_wordFinished()),
-            this   , SLOT(slt_searchFinished()),
-            Qt::QueuedConnection);
-
 }
 
 void TerminalDockWidget::procces(QString _commad) {

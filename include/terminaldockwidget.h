@@ -1,7 +1,6 @@
 #ifndef TERMINALDOCKWIDGET_H
 #define TERMINALDOCKWIDGET_H
 
-#include <QQueue>
 #include <QWidget>
 #include <QTextEdit>
 #include <QDockWidget>
@@ -13,7 +12,7 @@
 #include "tabdockwidget.h"
 #include "terminal/ReplWidget.h"
 #include "dataStructures/istack.h"
-
+#include "dataStructures/queue.h"
 
 #define MAX_N 20001
 #define INF 987654321

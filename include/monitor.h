@@ -4,24 +4,21 @@
 #include <QTextEdit>
 #include <QScrollBar>
 #include <QFileDialog>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 #include "base.h"
-#include "searchthread.h"
 
-class Monitor : public QTextEdit {
+class Monitor : public QGraphicsView {
 
     Q_OBJECT
 
 public:
     Monitor(QWidget* parent);
     ~Monitor();
-    void show(QString, QColor);
 private:
-    QColor defaultColor;
 public slots:
-    void slt_summery(Summery*);
-    void slt_show(ShowMaterial*);
-    void slt_search(SearchResult *);
+
 };
 
 extern Monitor* monitor;

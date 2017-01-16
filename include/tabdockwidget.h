@@ -28,7 +28,6 @@
 #include <QLabel>
 
 #include "base.h"
-#include "searchthread.h"
 #include "monitor.h"
 
 class TabDockWidget : public QDockWidget
@@ -71,17 +70,13 @@ public slots:
     void slt_reset();
     void slt_browse();
     void slt_buildComplete();
-    void slt_showLines(SearchResult*);
 
 private:
-    void showDatum(const Data &);
-    void showLine (const QString&, const Data&);
     void proccesFile(QFile&);
 
     QList< QList< QList<char> > > matrix;
 
 signals:
-    void sig_changeTree(ETree);
     void sig_fileToBuild(File*);
     void sig_fileOpend();
     void sig_build();

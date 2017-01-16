@@ -10,9 +10,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     setFocus();
 
-    search = new SearchThread(this);
-    search->start(QThread::HighestPriority);
-
     tabDock = new TabDockWidget(this);
     addDockWidget(Qt::LeftDockWidgetArea, tabDock);
     initWidget(tabDock);
@@ -30,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(monitor);
 
 
+
     QLabel* lll = new QLabel("Hello Mahi :D", statusBar());
     statusBar()->addWidget(lll);
 
@@ -41,8 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() {
 
-    search->terminate();
-    search->wait();
 }
 
 void MainWindow::initWidget(Monitor *_monitor) {
