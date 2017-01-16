@@ -6,6 +6,15 @@
 #include <QFileDialog>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QMenu>
+#include <QMessageBox>
+
+#include <qgv/QGVEdge.h>
+#include <qgv/QGVScene.h>
+#include <qgv/QGVNode.h>
+#include <qgv/QGVSubGraph.h>
+
+
 
 #include "base.h"
 
@@ -17,8 +26,12 @@ public:
     Monitor(QWidget* parent);
     ~Monitor();
 private:
-public slots:
+    QGVScene *m_scene;
 
+public slots:
+    void slt_show();
+    void nodeContextMenu(QGVNode* node);
+    void nodeDoubleClick(QGVNode* node);
 };
 
 extern Monitor* monitor;

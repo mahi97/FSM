@@ -50,7 +50,8 @@ void TabDockRightWidget::slt_build() {
         QStandardItem* item;
         QString sss;
         for (size_t j{1}; j <= tabDock->getState(); j++) {
-            QStandardItem* item = tabDock->getModel()->item(i, j);
+            QStandardItem* item = tabDock->getModel()->
+                    item(i, j);
             if (item->text() == "-") continue;
             QStringList s = item->text().split(",");
             Q_FOREACH(QString ss, s) {

@@ -10,6 +10,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     setFocus();
 
+    monitor = new Monitor(this);
+    initWidget(monitor);
+    setCentralWidget(monitor);
+
     tabDock = new TabDockWidget(this);
     addDockWidget(Qt::LeftDockWidgetArea, tabDock);
     initWidget(tabDock);
@@ -22,9 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     initWidget(terminal);
     addDockWidget(Qt::BottomDockWidgetArea, terminal);
 
-    monitor = new Monitor(this);
-    initWidget(monitor);
-    setCentralWidget(monitor);
 
 
 

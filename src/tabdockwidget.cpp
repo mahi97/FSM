@@ -22,6 +22,9 @@ TabDockWidget::TabDockWidget(QWidget *parent)
             this             , SLOT(slt_browse()));
     connect(btnBuild         , SIGNAL(clicked(bool)),
             this             , SLOT(slt_build()));
+
+
+    connect(btnBuild, SIGNAL(clicked(bool)), monitor, SLOT(slt_show()));
 }
 
 TabDockWidget::~TabDockWidget() {
@@ -100,22 +103,7 @@ void TabDockWidget::slt_open() {
 
 void TabDockWidget::slt_build() {
 
-
-
     emit sig_build();
-    // TODO : write build code
-//    Q_FOREACH(File* file, files) {
-//        if (!lastFiles.contains(file->name)) {
-//            btnBuild->setEnabled(false);
-//            cmbDataStrct->setEnabled(false);
-//            lastFiles.append(file->name);
-//            emit sig_fileToBuild(file);
-//            signalCounter++;
-//        }
-//    }
-//    if (signalCounter == 0) {
-//        monitor->show("Tree is Update, There's Nothing to build", Qt::red);
-//    }
 }
 
 void TabDockWidget::slt_buildComplete() {

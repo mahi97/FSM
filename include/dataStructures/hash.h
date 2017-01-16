@@ -3,12 +3,8 @@
 
 #include "tree.h"
 
-struct HNode : public Node {
-    
-};
-
 struct HashNode {
-    QList<HNode*> list;
+    QList<Node*> list;
     char key;
 };
 
@@ -25,7 +21,7 @@ public:
     static constexpr size_t SIZE{256};
 private:
     unsigned char hashFunction(QString &);
-    HNode* makeNode(Data *);
+    Node* makeNode(Data *);
     
     HashNode table[SIZE];
     
