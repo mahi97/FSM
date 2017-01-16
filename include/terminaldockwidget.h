@@ -12,6 +12,14 @@
 #include "tabdockright.h"
 #include "tabdockwidget.h"
 #include "terminal/ReplWidget.h"
+#include "dataStructures/istack.h"
+
+
+#define MAX_N 20001
+#define INF 987654321
+
+typedef long long lld;
+
 
 class TerminalDockWidget : public QDockWidget {
 
@@ -27,11 +35,47 @@ private:
     void proccesFind(QStringList&);
 
     bool checkFSM(QString&);
-    void backTrack(int index, int arr[], int s, int e, bool &done, Queue c);
-    bool promising(int _i, int arr[], int &s, int e, char c);
+    void btCheckFSM(int index, int s, int e, bool &done, Queue c);
+    bool promisingCheckFSM(int _i, int &s, int e, char c);
+
+    QStringList findLoops();
+    void tarjan();
+    void tarjanDFS(int i);
+    void deleteLoops();
 
     int wordsToSearch;
     bool searchPhrase;
+
+    QStringList loops;
+
+
+    ////TARJAN
+    ///
+    ///
+    ///
+
+    int min(int a, int b) {
+        return ((a < b) ? a : b);
+    }
+
+    int n;
+    struct Node
+    {
+        QVector<int> adj;
+    };
+    Node graf[MAX_N];
+    IStack m_stack;
+    bool onStack[MAX_N];
+    int Indices;
+    int Index[MAX_N];
+    int LowLink[MAX_N];
+    int component[MAX_N];
+    int numComponents;
+    QStringList components;
+
+    ///
+
+
 
 public slots:
     void procces(QString);

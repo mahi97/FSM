@@ -43,7 +43,8 @@ HEADERS  += include/mainwindow.h \
     include/dataStructures/stack.h \
     include/dataStructures/hash.h \
     include/tabdockright.h \
-    include/dataStructures/queue.h
+    include/dataStructures/queue.h \
+    include/dataStructures/istack.h
 
 
 INCLUDEPATH += $$PWD/include

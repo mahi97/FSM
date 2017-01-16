@@ -80,24 +80,15 @@ bool TerminalDockWidget::checkFSM(QString & _str) {
     int i {0};
     int* arr = new int [tabDock->getState()];
     bool done;
-    backTrack(-1, arr, s, e, done, q);
+    btCheckFSM(-1, s, e, done, q);
 
     return done;
 
-//    while (!q.isEmpty()) {
-//        char c = q.dequeue();
-//        for (int j{}; j < tabDockRight->getModel()->columnCount(); j++) {
-//            if ( tabDockRight->getModel()->item(s,j)->text().contains(c) ) {
-//                qDebug() << j;
-//                s = j + 1;
-//            }
-//        }
-//    }
 }
 
-void TerminalDockWidget::backTrack(int index, int arr[],
-                                   int s,     int e,
-                                   bool& done, Queue c) {
+void TerminalDockWidget::btCheckFSM(int index,
+                                    int s,     int e,
+                                    bool& done, Queue c) {
 
     if (done) {
         return;
@@ -111,24 +102,23 @@ void TerminalDockWidget::backTrack(int index, int arr[],
         return;
     }
 
-    if (promising(index, arr, s, e, c.front())){
+    if (promisingCheckFSM(index, s, e, c.front())){
         if (index != -1)
             c.dequeue();
         qDebug() << tabDock->getModel()->columnCount();
         for (int i{}; i < tabDock->getModel()->columnCount() ; i++) {
             qDebug() << "sic" << s << " " << i << " " << c.size();
-            backTrack(i , arr, s, e, done, c);
+            btCheckFSM(i, s, e, done, c);
         }
 
     }
 }
 
-bool TerminalDockWidget::promising(int _i, int arr[],
-                                   int& s, int e, char c) {
+bool TerminalDockWidget::promisingCheckFSM(int _i,
+                                           int& s, int e, char c) {
     if (_i == -1) return true;
     if (tabDock->getModel()->item(_i, s)->text().contains(c)) {
         s = _i;
-        qDebug() << "f" << s;
         return true;
 
     } else {
@@ -137,13 +127,120 @@ bool TerminalDockWidget::promising(int _i, int arr[],
     }
 }
 
-void TerminalDockWidget::proccesDel(QStringList & _cmd) {
+QStringList TerminalDockWidget::findLoops() {
+    QStandardItemModel*& rModel = tabDock->getModel();
+    int size = tabDock->getState();
+    n = size;
+    for (int i{}; i < size; i++) {
+        for (int j{}; j < size; j++) {
+            if (rModel->item(i + 1, j + 1)->text() != "-") {
+                graf[i].adj.push_back(j);
+            }
+        }
+    }
+    components.clear();
+    tarjan();
+
+    return components;
+
+}
+
+void TerminalDockWidget::tarjan()
+{
+    Indices = 0;
+    while (!m_stack.empty()) {
+        m_stack.pop();
+    }
+
+    for (int i=n;i>0;i--) {
+        onStack[i] = LowLink[i] = Index[i] = 0;
+    }
+
+    numComponents = 0;
+    for (int i{}; i < n; i++) {
+        if (Index[i] == 0) {
+            tarjanDFS(i);
+        }
+
+    }
+}
+
+void TerminalDockWidget::tarjanDFS(int i) {
+    Index[i] = ++Indices;
+    LowLink[i] = Indices;
+    m_stack.push(i);
+    onStack[i] = true;
+    for (int j{} ; j < graf[i].adj.size() ; j++)
+    {
+        int w = graf[i].adj[j];
+        if (Index[w] == 0) {
+            tarjanDFS(w);
+            LowLink[i] = min(LowLink[i], LowLink[w]);
+
+        } else if (onStack[w]) {
+            LowLink[i] = min(LowLink[i], Index[w]);
+
+        }
+    }
+    if (LowLink[i] == Index[i]) {
+        int w = 0;
+        QString com;
+        com.append(" ");
+        do {
+            w = m_stack.top();
+            m_stack.pop();
+
+            component[w] = numComponents;
+            onStack[w]=false;
+            com.append(QString("%1 ").arg(w));
+
+        } while (i != w && !m_stack.empty());
+
+        components.append(com);
+        numComponents++;
+
+    }
 
 }
 
 
-void TerminalDockWidget::proccesFind(QStringList & _cmd) {
 
+void TerminalDockWidget::deleteLoops() {
+
+}
+
+void TerminalDockWidget::proccesDel(QStringList & _cmd) {
+    if (_cmd.size() == 1) {
+        if (_cmd[0] == "loop") {
+            deleteLoops();
+            emit resultReady("Deleted !");
+        } else {
+            emit resultReady("err : just write `del loop`");
+
+        }
+    } else {
+        emit resultReady("err: just write `del loop`");
+    }
+}
+
+
+void TerminalDockWidget::proccesFind(QStringList & _cmd) {
+    if (_cmd.size() == 1) {
+        if (_cmd[0] == "loop") {
+            loops = findLoops();
+            QString tStr;
+            Q_FOREACH(QString str, loops) {
+                tStr.append("(");
+                tStr.append(str);
+                tStr.append("), ");
+            }
+            emit resultReady(tStr);
+        } else {
+            emit resultReady("err : just write `find loop`");
+        }
+    } else {
+        emit resultReady("err : just write `find loop`");
+    }
 }
 
 void TerminalDockWidget::slt_searchFinished() {
