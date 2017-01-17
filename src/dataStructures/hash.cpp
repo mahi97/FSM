@@ -18,14 +18,6 @@ void Hash::insert(Data *_data) {
     Node* tempNode = makeNode(_data);
     table[tKey].list.append(tempNode);
     wordsCount++;
-
-    qDebug() << tKey;
-    qDebug() << table[tKey].list.size();
-    for (int i {}; i < table[tKey].list.size(); i++) {
-        qDebug () << table[tKey].list.at(i)->key_;
-    }
-    qDebug() << "``````";
-
 }
 
 Node *Hash::makeNode(Data* _data) {

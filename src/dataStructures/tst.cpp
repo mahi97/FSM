@@ -7,7 +7,6 @@ TST::TST() : Tree(){
 
 void TST::insert(Data *_data) {
     TSTNode* paroot = NULL;
-    qDebug () << _data->key;
     insert(_data, root, paroot, 0);
 }
 
@@ -44,7 +43,6 @@ void TST::insert(Data *_data, TSTNode *& _node, TSTNode*& _par, size_t cursor) {
 
 
     findBF(_node);
-    qDebug() << _node->key << " --- " << _node->balanceFactor;
     adjustTreeNode(_node, _par);
 
 }
@@ -160,7 +158,6 @@ void TST::shiftTree(TSTNode *& _node, TSTNode *& _par, bool _shiftToLeft) {
     }
 
     int bf = rFindBF(_node);
-    qDebug() << bf;
 }
 
 void TST::findBF(TSTNode *&_node) {

@@ -9,29 +9,20 @@
 #include <QMenu>
 #include <QMessageBox>
 
-#include <qgv/QGVEdge.h>
-#include <qgv/QGVScene.h>
-#include <qgv/QGVNode.h>
-#include <qgv/QGVSubGraph.h>
-
-
-
 #include "base.h"
 
-class Monitor : public QGraphicsView {
+class Monitor : public QTextEdit {
 
     Q_OBJECT
 
 public:
     Monitor(QWidget* parent);
     ~Monitor();
+    void show(QString, QColor);
 private:
-    QGVScene *m_scene;
-
+    QColor defaultColor;
 public slots:
-    void slt_show();
-    void nodeContextMenu(QGVNode* node);
-    void nodeDoubleClick(QGVNode* node);
+    void slt_show(ShowMaterial*);
 };
 
 extern Monitor* monitor;

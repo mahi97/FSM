@@ -62,7 +62,7 @@ private:
     PropertyGet(int, State, m_state);
     PropertyGet(QStandardItemModel*, Model, model);
     PropertyGet(QComboBox*, cmb_Start, start);
-    PropertyGet(QComboBox*, cmb_end, end);
+    PropertyGet(QLineEdit*, cmb_end, end);
 
 public slots:
     void slt_open();

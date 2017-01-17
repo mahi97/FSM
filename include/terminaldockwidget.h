@@ -34,8 +34,8 @@ private:
     void proccesFind(QStringList&);
 
     bool checkFSM(QString&);
-    void btCheckFSM(int index, int s, int e, bool &done, Queue c);
-    bool promisingCheckFSM(int _i, int &s, int e, char c);
+    void btCheckFSM(int index, int s, QString e, bool &done, Queue c);
+    bool promisingCheckFSM(int _i, int &s, char c);
 
     QStringList findLoops();
     void tarjan();

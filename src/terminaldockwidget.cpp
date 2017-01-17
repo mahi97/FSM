@@ -59,15 +59,15 @@ void TerminalDockWidget::proccesCheck(QStringList & _cmd) {
 
 bool TerminalDockWidget::checkFSM(QString & _str) {
     int s = tabDock->getcmb_Start() -> currentIndex() + 1;
-    int e = tabDock->getcmb_end()   -> currentIndex() + 1;
+//    int e = tabDock->getcmb_end()   -> currentIndex() + 1;
+    QString e = tabDock->getcmb_end()->text();
 
     Queue q;
     for(int i {}; i < _str.size(); i++) {
         q.enqueue(_str.at(i).toLatin1());
     }
     int i {0};
-    int* arr = new int [tabDock->getState()];
-    bool done;
+    bool done {false};
     btCheckFSM(-1, s, e, done, q);
 
     return done;
@@ -75,14 +75,14 @@ bool TerminalDockWidget::checkFSM(QString & _str) {
 }
 
 void TerminalDockWidget::btCheckFSM(int index,
-                                    int s,     int e,
+                                    int s,     QString e,
                                     bool& done, Queue c) {
 
     if (done) {
         return;
     }
     if (c.isEmpty()) {
-        if (s == e || done) done = true;
+        if (e.contains(QString("%1").arg(s - 1)) || done) done = true;
         else done = false;
         return;
     }
@@ -90,12 +90,10 @@ void TerminalDockWidget::btCheckFSM(int index,
         return;
     }
 
-    if (promisingCheckFSM(index, s, e, c.front())){
+    if (promisingCheckFSM(index, s, c.front())){
         if (index != -1)
             c.dequeue();
-        qDebug() << tabDock->getModel()->columnCount();
         for (int i{}; i < tabDock->getModel()->columnCount() ; i++) {
-            qDebug() << "sic" << s << " " << i << " " << c.size();
             btCheckFSM(i, s, e, done, c);
         }
 
@@ -103,7 +101,7 @@ void TerminalDockWidget::btCheckFSM(int index,
 }
 
 bool TerminalDockWidget::promisingCheckFSM(int _i,
-                                           int& s, int e, char c) {
+                                           int& s, char c) {
     if (_i == -1) return true;
     if (tabDock->getModel()->item(_i, s)->text().contains(c)) {
         s = _i;

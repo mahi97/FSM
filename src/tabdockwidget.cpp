@@ -24,7 +24,7 @@ TabDockWidget::TabDockWidget(QWidget *parent)
             this             , SLOT(slt_build()));
 
 
-    connect(btnBuild, SIGNAL(clicked(bool)), monitor, SLOT(slt_show()));
+    connect(btnBuild, SIGNAL(clicked(bool)), monitor, SLOT(slt_show(ShowMaterial*)));
 }
 
 TabDockWidget::~TabDockWidget() {
@@ -53,7 +53,7 @@ void TabDockWidget::fillLayout(QVBoxLayout *_layout) {
     QLabel *e = new QLabel("End : ");
 
     start = new QComboBox(this);
-    end   = new QComboBox(this);
+    end   = new QLineEdit(this);
 
 
     combo->addWidget(s);
@@ -92,10 +92,10 @@ void TabDockWidget::slt_open() {
     proccesFile(f);
     for (int i{}; i < m_state; i++) {
         start->addItem(QString("%1").arg(i));
-        end->addItem(QString("%1").arg(i));
+        end->insert(QString("%1,").arg(i));
     }
     start->setCurrentIndex(0);
-    end->setCurrentIndex(m_state - 1);
+//    end->setCurrentIndex(m_state - 1);
     emit sig_fileOpend();
     f.close();
 }

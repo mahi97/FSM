@@ -11,11 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = DS
 TEMPLATE = app
 
-#GraphViz librairie
-DEFINES += WITH_CGRAPH
-INCLUDEPATH += private
-QMAKE_CXXFLAGS += -DQGVCORE_LIB
-
 VPATH += $$PWD/src
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -52,10 +47,8 @@ HEADERS  += include/mainwindow.h \
 
 INCLUDEPATH += $$PWD/include
 INCLUDEPATH += /usr/local/Cellar/graphviz/2.40.1/include/
-INCLUDEPATH += /usr/local/include
 
 LIBS += -L/usr/local/Cellar/graphviz/2.40.1/lib -lgvc -lcgraph -lcdt
-LIBS += -L/usr/local/lib -lQGVCore
 
 OBJECTS_DIR = $$PWD/objs/
 MOC_DIR = $$PWD/objs/

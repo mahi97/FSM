@@ -99,7 +99,6 @@ void BST::shiftTree(BSTNode *&_node, BSTNode*& _par, bool shiftToLeft) {
     }
 
     int bf = rfindBF(_node);
-    qDebug() << bf;
 }
 
 void BST::addNode(Data *_data, BSTNode *&_node) {
