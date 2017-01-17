@@ -1,7 +1,18 @@
-DS Search Project
+Procces Strings With Finite State Machine
 =====
 
-First DS Project (simple search using invert indexing)
+implemetation of :
+   - a finite state machine
+   - and build the graph
+   - build adjacent graph
+   - find strongly connected component
+   - check strings on FSM
+   - delete loops of FSM (wisely)
+   
+also implementing of :
+  - backtrack checking the string in graph for checking
+  - Tarjan algo to find SCC
+  - Prim to find MST in order to delete loops wisely
 
 
 Software Requirements
